@@ -11,34 +11,29 @@ export class UserController {
     
 
     @Get()
-    obterTodos(): User[] {
+    async obterTodos(): Promise<User[]> {
         return this.usersService.obterTodos()
     }
     @Get(':id')
-    obterUm(@Param() params):User{
-        try{
+    async obterUm(@Param() params): Promise<User>{
             const user = this.usersService.obterUm(params.id)
             if(user){
                 return user
             }
-        }catch(error){
-            console.log(error)
-        }
     }
 
     @Post()
-    criar(@Body() user: User){
+    async criar(@Body() user: User){
         this.usersService.criar(user)
     }
 
     @Put()
-    atualizar(@Body() user:User): User{
-        this.usersService.alterar(user)
-        return user
+    async atualizar(@Body() user:User): Promise<[number, User[]]>{
+        return this.usersService.alterar(user)
     }
 
     @Delete(':id')
-    apagar(@Param() params){
+    async apagar(@Param() params){
         this.usersService.apagar(params.id)
     }
 }

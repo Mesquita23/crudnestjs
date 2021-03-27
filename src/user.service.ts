@@ -1,33 +1,39 @@
 import { Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/sequelize";
 import { User } from "./user.model";
 
 @Injectable()
 export class UsersService{
 
-    users:User[] = [
-        new User('Harry Potter', 'harry@gmail.com', 'harrypass'),
-        new User('Forest Gump','Forest@gmail.com', 'Forestypass'),
-        new User('Caçador de pipa', 'pipa@gmail.com', 'pipapass'),
-    ]
+    constructor(
+        @InjectModel(User)
+        private userModel: typeof User
+    ){}
 
-    obterTodos(): User[]{
-        return this.users
+    
+    async obterTodos(): Promise<User[]>{
+        return this.userModel.findAll()
     }
 
-    obterUm(id: number): User{
-        return this.users[id]
+    async obterUm(id: number): Promise<User>{
+        return this.userModel.findByPk(id)
     }
 
-    criar(user:User){
-        this.users.push(user)
+    async criar(user:User){
+        this.userModel.create(user)
     }
 
-    alterar(user: User): User {
-        return user
+    async alterar(user: User): Promise<[number, User[]]> {
+        return this.userModel.update(user, {
+            where: {
+                id: user.id
+            }
+        })
     }
 
-    apagar(id:Number){
-        this.users.pop()
+    async apagar(id: number){
+        const user: User = await this.obterUm(id);
+        user.destroy()
     }
 
 }

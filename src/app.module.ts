@@ -3,18 +3,27 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserController } from './user.controller';
 import { UsersService } from './user.service';
-import { Sequelize } from 'sequelize-typescript'
+import { User } from './user.model';
+
+import { SequelizeModule } from '@nestjs/sequelize';
+import { ConfigModule } from '@nestjs/config/dist/config.module';
+
+
 
 @Module({
   imports: [
-    Sequelize.forRoot({
+    ConfigModule.forRoot(),
+    SequelizeModule.forRoot({
       dialect: 'mysql',
       host: 'localhost',
       port: 3306,
-      username: 'root',
-      password: '0000',
+      username: process.env.USUARIO_BANCO_DADOS,
+      password: process.env.PASS_BANCO_DADOS,
       database: 'crudnest',
-    })
+      autoLoadModels: true,
+      synchronize: true, 
+    }),
+    SequelizeModule.forFeature([User])
   ],
   controllers: [AppController, UserController],
   providers: [AppService, UsersService],
