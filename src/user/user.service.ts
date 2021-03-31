@@ -32,7 +32,7 @@ export class UserService{
     }
 
     async delete(id: number){
-        const user: User = await this.obterUm(id);
+        const user: User = await this.getById(id);
         user.destroy()
     }
 

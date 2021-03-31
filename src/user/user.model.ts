@@ -1,3 +1,4 @@
+import { Exclude, Expose } from "class-transformer"
 import { IsEmail, IsNotEmpty, IsNumber, IsString } from "class-validator"
 import { Table, Model, Column, DataType } from "sequelize-typescript"
 import { IsUserNameUnique } from "./validators/isUserNameUnique"
@@ -34,6 +35,12 @@ export class User extends Model<User> {
     })
     email: string
 
+    @Expose({
+        name: "password"
+    })
+    @Exclude({
+        toPlainOnly: true
+    })
     @IsNotEmpty(
         {
             message:"Password is required"
