@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { UserController } from './user.controller';
-import { UsersService } from './user.service';
-import { User } from './user.model';
+import { User } from './user/user.model';
 
 import { ConfigModule } from '@nestjs/config/dist/config.module';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { UserController } from './user/user.controller';
+import { UserService } from './user/user.service';
+import { IsUserNameUniqueConstraint } from './user/validators/isUserNameUnique';
 
 
 
@@ -23,9 +22,10 @@ import { SequelizeModule } from '@nestjs/sequelize';
       autoLoadModels: true,
       synchronize: true, 
     }),
-    SequelizeModule.forFeature([User])
+    SequelizeModule.forFeature([User]),
+    
   ],
-  controllers: [AppController, UserController],
-  providers: [AppService, UsersService],
+  controllers: [UserController],
+  providers: [UserService, IsUserNameUniqueConstraint],
 })
 export class AppModule {}

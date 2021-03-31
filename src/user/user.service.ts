@@ -3,7 +3,7 @@ import { InjectModel } from "@nestjs/sequelize";
 import { User } from "./user.model";
 
 @Injectable()
-export class UsersService{
+export class UserService{
 
     constructor(
         @InjectModel(User)
@@ -11,19 +11,19 @@ export class UsersService{
     ){}
 
     
-    async obterTodos(): Promise<User[]>{
+    async getAll(): Promise<User[]>{
         return this.userModel.findAll()
     }
 
-    async obterUm(id: number): Promise<User>{
+    async getById(id: number): Promise<User>{
         return this.userModel.findByPk(id)
     }
 
-    async criar(user:User){
+    async create(user:User){
         this.userModel.create(user)
     }
 
-    async alterar(user: User): Promise<[number, User[]]> {
+    async update(user: User): Promise<[number, User[]]> {
         return this.userModel.update(user, {
             where: {
                 id: user.id
@@ -31,9 +31,18 @@ export class UsersService{
         })
     }
 
-    async apagar(id: number){
+    async delete(id: number){
         const user: User = await this.obterUm(id);
         user.destroy()
+    }
+
+    async getByName(name: string): Promise<User> {
+        const user = this.userModel.findAll({
+            where: {
+                name: name
+            }
+        })
+        return user[0];
     }
 
 }
